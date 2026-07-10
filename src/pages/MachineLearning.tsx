@@ -26,10 +26,9 @@ const REGRESSION_MODELS = [
 ];
 
 export function MachineLearning() {
-  const { fileInfo, cleanedData, columns } = useDataStore();
+  const { fileInfo, cleanedData, columns, mlResults, setMlResults } = useDataStore();
   const [targetCol, setTargetCol] = useState<string>("");
   const [isTraining, setIsTraining] = useState(false);
-  const [results, setResults] = useState<any>(null);
 
   if (!fileInfo || cleanedData.length === 0) {
     return (
@@ -53,7 +52,6 @@ export function MachineLearning() {
     }
 
     setIsTraining(true);
-    setResults(null);
 
     // Simulate network delay for training
     setTimeout(() => {
@@ -89,7 +87,7 @@ export function MachineLearning() {
         return parseFloat(b.r2 ?? "0") - parseFloat(a.r2 ?? "0");
       });
 
-      setResults({
+      setMlResults({
         type: isClassification ? 'Classification' : 'Regression',
         target: targetCol,
         metrics: simulatedResults
@@ -166,7 +164,7 @@ export function MachineLearning() {
         </div>
 
         <div className="glass-card rounded-xl p-6 md:col-span-2 border border-white/10 min-h-[400px]">
-          {!results && !isTraining && (
+          {!mlResults && !isTraining && (
             <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
               <BrainCircuit className="h-16 w-16 mb-4" />
               <h3 className="text-lg font-medium">Awaiting Configuration</h3>
@@ -182,12 +180,12 @@ export function MachineLearning() {
             </div>
           )}
 
-          {results && !isTraining && (
+          {mlResults && !isTraining && (
             <div className="animate-in fade-in">
               <div className="flex justify-between items-end mb-6">
                 <div>
                   <h3 className="text-xl font-semibold">Model Performance Results</h3>
-                  <p className="text-sm text-muted-foreground">Task: {results.type} | Target: {results.target}</p>
+                  <p className="text-sm text-muted-foreground">Task: {mlResults.type} | Target: {mlResults.target}</p>
                 </div>
                 <Button variant="outline" asChild size="sm">
                   <Link to="/compare">View Detailed Comparison</Link>
@@ -199,7 +197,7 @@ export function MachineLearning() {
                   <TableHeader>
                     <TableRow className="bg-white/5 border-white/10">
                       <TableHead>Model</TableHead>
-                      {results.type === 'Classification' ? (
+                      {mlResults.type === 'Classification' ? (
                         <>
                           <TableHead>Accuracy</TableHead>
                           <TableHead>Precision</TableHead>
@@ -217,12 +215,12 @@ export function MachineLearning() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {results.metrics.map((metric: any, i: number) => (
+                    {mlResults.metrics.map((metric: any, i: number) => (
                       <TableRow key={i} className={`border-white/10 ${i === 0 ? 'bg-primary/10 border-l-2 border-l-primary' : ''}`}>
                         <TableCell className="font-medium flex items-center gap-2">
                           {metric.model} {i === 0 && <span className="bg-primary text-primary-foreground text-[10px] px-2 py-0.5 rounded-full">Best</span>}
                         </TableCell>
-                        {results.type === 'Classification' ? (
+                        {mlResults.type === 'Classification' ? (
                           <>
                             <TableCell className={i===0?'font-bold text-primary':''}>{metric.accuracy}</TableCell>
                             <TableCell>{metric.precision}</TableCell>

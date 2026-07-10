@@ -12,13 +12,21 @@ export interface FileInfo {
   type: string;
 }
 
+export interface MLResult {
+  type: 'Classification' | 'Regression';
+  target: string;
+  metrics: any[];
+}
+
 interface DataState {
   fileInfo: FileInfo | null;
   rawData: any[];
   cleanedData: any[];
   columns: DataColumn[];
+  mlResults: MLResult | null;
   setFileData: (fileInfo: FileInfo, data: any[]) => void;
   setCleanedData: (data: any[]) => void;
+  setMlResults: (results: MLResult | null) => void;
   reset: () => void;
 }
 
@@ -42,10 +50,11 @@ export const useDataStore = create<DataState>((set) => ({
   rawData: [],
   cleanedData: [],
   columns: [],
+  mlResults: null,
 
   setFileData: (fileInfo, data) => {
     if (data.length === 0) {
-      set({ fileInfo, rawData: [], cleanedData: [], columns: [] });
+      set({ fileInfo, rawData: [], cleanedData: [], columns: [], mlResults: null });
       return;
     }
 
@@ -60,7 +69,7 @@ export const useDataStore = create<DataState>((set) => ({
       };
     });
 
-    set({ fileInfo, rawData: data, cleanedData: data, columns });
+    set({ fileInfo, rawData: data, cleanedData: data, columns, mlResults: null });
   },
 
   setCleanedData: (data) => {
@@ -81,5 +90,7 @@ export const useDataStore = create<DataState>((set) => ({
     set({ cleanedData: data, columns });
   },
 
-  reset: () => set({ fileInfo: null, rawData: [], cleanedData: [], columns: [] }),
+  setMlResults: (results) => set({ mlResults: results }),
+
+  reset: () => set({ fileInfo: null, rawData: [], cleanedData: [], columns: [], mlResults: null }),
 }));

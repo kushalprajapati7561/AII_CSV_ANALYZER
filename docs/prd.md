@@ -144,24 +144,43 @@ AI CSV Analyzer Pro
   - Train Regression Models: Linear Regression, Random Forest Regressor, Decision Tree Regressor, XGBoost Regressor
   - Display metrics: R² Score, MAE, MSE, RMSE
 - Present results for each model
+- Store trained model results for use in Model Comparison Dashboard and Feature Importance section
 
 ### 3.8 Model Comparison Dashboard
 
 **Purpose**: Compare performance of trained models
 
 **Functionality**:
-- Display leaderboard table with columns: Model, Accuracy/R², Rank
-- Highlight best performing model
-- Sort models by performance metric
+- Retrieve model performance data from Machine Learning Dashboard
+- Generate simulated comparison data based on trained models:
+  - For classification models: use Accuracy as primary metric
+  - For regression models: use R² Score as primary metric
+- Display interactive leaderboard using Recharts:
+  - Bar chart showing model performance comparison
+  - Table listing models with columns: Model Name, Performance Metric, Rank
+- Highlight best performing model with visual indicator
+- Sort models by performance metric in descending order
+- Show metric name dynamically based on model type (Accuracy or R² Score)
 
 ### 3.9 Feature Importance
 
 **Purpose**: Show feature contribution to model predictions
 
 **Functionality**:
-- Display feature importance graph
-- List most influential features
-- Show correlation with target variable
+- Generate simulated feature importance data based on dataset features and trained models
+- Calculate importance scores for each feature:
+  - Use correlation with target variable as basis
+  - Normalize scores to percentage values
+  - Rank features by importance
+- Display feature importance visualization using Recharts:
+  - Horizontal bar chart showing top 10-15 features
+  - X-axis: Importance Score (0-100%)
+  - Y-axis: Feature Names
+  - Color gradient indicating importance level
+- Show detailed feature importance table:
+  - Columns: Feature Name, Importance Score, Rank
+  - Sort by importance score descending
+- Display correlation coefficient with target variable for each feature
 
 ### 3.10 Advanced Analytics
 
@@ -224,19 +243,38 @@ AI CSV Analyzer Pro
 - Model training uses default train-test split
 - Classification models apply to categorical targets
 - Regression models apply to numerical targets
+- Model results stored in application state for downstream use
 
-### 4.4 Visualization Rules
+### 4.4 Model Comparison Rules
+- Model comparison data generated after Machine Learning Dashboard completes training
+- Performance metrics extracted from trained model results:
+  - Classification: Accuracy
+  - Regression: R² Score
+- Models ranked automatically by performance metric
+- Leaderboard updates when new models are trained
+
+### 4.5 Feature Importance Rules
+- Feature importance calculated using simulated algorithm:
+  - Calculate absolute correlation between each feature and target variable
+  - Normalize correlation values to 0-100% scale
+  - Add random variation to simulate model-specific importance
+- Display top 10-15 most important features
+- Features with missing or invalid data excluded from importance calculation
+- Importance scores recalculated when dataset or target column changes
+
+### 4.6 Visualization Rules
 - Charts automatically select appropriate columns based on data types
 - Numeric columns used for histograms, box plots, scatter plots
 - Categorical columns used for pie charts, bar charts
 - Correlation heatmap uses numeric columns only
+- Recharts used for Model Comparison and Feature Importance visualizations
 
-### 4.5 Report Generation Rules
+### 4.7 Report Generation Rules
 - PDF generation uses jsPDF library
 - Reports include all analysis results from current session
 - Export files use original dataset name as prefix
 
-### 4.6 Performance Optimization Rules
+### 4.8 Performance Optimization Rules
 - Use caching for processed data
 - Implement memory optimization for large datasets
 - Process data on client-side to reduce server load
@@ -255,6 +293,10 @@ AI CSV Analyzer Pro
 | Model training fails | Show error message, skip failed model |
 | Chart rendering fails | Display fallback message, continue with other charts |
 | PDF generation fails | Show error notification, allow retry |
+| No models trained | Display message in Model Comparison Dashboard: \"Train models first\" |
+| Target column not selected | Show prompt to select target column before viewing Feature Importance |
+| Feature importance calculation fails | Display error message, show empty state |
+| Recharts library fails to load | Display fallback text-based comparison table |
 
 ## 6. Acceptance Criteria
 
@@ -264,8 +306,9 @@ AI CSV Analyzer Pro
 4. User applies data cleaning operations in Data Cleaning Module
 5. User views automatically generated visualizations in Visualization Dashboard
 6. System trains machine learning models and displays results in Machine Learning Dashboard
-7. User compares model performance in Model Comparison Dashboard
-8. User generates and downloads PDF report from Report Generation section
+7. User navigates to Model Comparison Dashboard and views interactive bar chart and leaderboard table comparing model performance using Recharts
+8. User navigates to Feature Importance section and views horizontal bar chart showing top features with importance scores and detailed table using Recharts
+9. User generates and downloads PDF report from Report Generation section
 
 ## 7. Out of Scope for Current Release
 
@@ -282,3 +325,5 @@ AI CSV Analyzer Pro
 - Custom chart creation tools
 - Mobile native applications (iOS/Android)
 - Offline mode functionality
+- Backend server for actual machine learning model training
+- Integration with external machine learning libraries or services
