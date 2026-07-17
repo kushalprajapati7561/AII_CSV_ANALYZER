@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to Your Miaoda Project
 
 ## Project Info
@@ -89,3 +90,6 @@ Configure environment variables and install relevant dependencies.If you need to
 ## Learn More
 
 You can also check the help documentation: Download and Building the app（ [https://intl.cloud.baidu.com/en/doc/MIAODA/s/download-and-building-the-app-en](https://intl.cloud.baidu.com/en/doc/MIAODA/s/download-and-building-the-app-en)）to learn more detailed content.
+=======
+# AII_CSV_ANALYZER
+>>>>>>> 46b871f29e5ce51a1e0c0ef53684dece0634e0ee
